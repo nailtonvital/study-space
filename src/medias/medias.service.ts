@@ -9,25 +9,47 @@ import { Media } from './entities/media.entity';
 export class MediasService {
   constructor(
     @InjectRepository(Media)
-    private plantRepository: Repository<Media>,
-  ) {}
+    private mediaRepository: Repository<Media>,
+  ) { }
   create(createMediaDto: CreateMediaDto) {
-    return 'This action adds a new media';
+    try {
+      return this.mediaRepository.insert(createMediaDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   findAll() {
-    return `This action returns all medias`;
+    try {
+      return this.mediaRepository.find();
+    } catch (error) {
+      throw error;
+    }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} media`;
+    try {
+      return this.mediaRepository.createQueryBuilder('media')
+        .where('media.idMedia = :id', { id })
+        .getOne();
+    } catch (error) {
+      throw error;
+    }
   }
 
   update(id: number, updateMediaDto: UpdateMediaDto) {
-    return `This action updates a #${id} media`;
+    try {
+      return this.mediaRepository.update(id, updateMediaDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} media`;
+    try {
+      return this.mediaRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

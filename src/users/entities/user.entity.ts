@@ -1,6 +1,7 @@
+import { PostComment } from "../../post-comments/entities/post-comment.entity";
 import { Interest } from "../../interests/entities/interest.entity";
 import { Post } from "../../posts/entities/post.entity";
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -34,9 +35,28 @@ export class User {
     @Column()
     gender: string;
 
-    @ManyToMany(() => Interest)
+    @ManyToMany(type => Interest, interest => interest.users)
+    @JoinTable({
+        name: 'user_interest',
+        joinColumn: { name: 'idUser', referencedColumnName: 'idUser' },
+        inverseJoinColumn: { name: 'idInterest', referencedColumnName: 'idInterest' }
+
+    })
     interests: Interest[];
 
-    @OneToMany(() => Post, post => post.user)
+    @OneToMany(type => Post, post => post.user)
+    @JoinTable({
+        name: 'post',
+        joinColumn: { name: 'idUser', referencedColumnName: 'idUser' },
+        inverseJoinColumn: { name: 'idPost', referencedColumnName: 'idPost' }
+    })
     posts: Post[];
+
+    @OneToMany(type => PostComment, postComment => postComment.user)
+    @JoinTable({
+        name: 'post_comment',
+        joinColumn: { name: 'idUser', referencedColumnName: 'idUser' },
+        inverseJoinColumn: { name: 'idPostComment', referencedColumnName: 'idPostComment' }
+    })
+    comments: PostComment[];
 }

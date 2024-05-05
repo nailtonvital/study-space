@@ -9,25 +9,47 @@ import { Interest } from './entities/interest.entity';
 export class InterestsService {
   constructor(
     @InjectRepository(Interest)
-    private plantRepository: Repository<Interest>,
-  ) {}
+    private interestRepository: Repository<Interest>,
+  ) { }
   create(createInterestDto: CreateInterestDto) {
-    return 'This action adds a new interest';
+    try {
+      return this.interestRepository.insert(createInterestDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   findAll() {
-    return `This action returns all interests`;
+    try {
+      return this.interestRepository.find();
+    } catch (error) {
+      throw error;
+    }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} interest`;
+    try {
+      return this.interestRepository.createQueryBuilder('interest')
+        .where('interest.idInterest = :id', { id })
+        .getOne();
+    } catch (error) {
+      throw error;
+    }
   }
 
   update(id: number, updateInterestDto: UpdateInterestDto) {
-    return `This action updates a #${id} interest`;
+    try {
+      return this.interestRepository.update(id, updateInterestDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} interest`;
+    try {
+      return this.interestRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

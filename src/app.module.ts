@@ -26,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
         synchronize: true,
         entities: ['dist/**/*.entity{.ts,.js}'],
         autoLoadEntities: true,
+        debug: true,
       })
     }),
     UsersModule, PostsModule, MediasModule, InterestsModule, PostCommentsModule],

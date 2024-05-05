@@ -16,9 +16,9 @@ export class PostComment {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP'})
     updatedAt: Date;
 
-    @ManyToOne(() => Post)
+    @ManyToOne(() => Post, post => post.comments)
     post: Post;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, user => user.comments)
     user: User;
 }

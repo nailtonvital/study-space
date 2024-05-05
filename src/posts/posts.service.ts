@@ -4,32 +4,93 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
+import { Interest } from '../interests/entities/interest.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class PostsService {
 
   constructor(
     @InjectRepository(Post)
-    private plantRepository: Repository<Post>,
-  ) {}
+    private postRepository: Repository<Post>,
+    @InjectRepository(Interest)
+    private interestRepository: Repository<Interest>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) { }
 
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+  async create(createPostDto: CreatePostDto) {
+    try {
+      const post = this.postRepository.create(createPostDto);
+
+      if (createPostDto.interestIds && createPostDto.interestIds.length > 0) {
+        const interests = [];
+
+        for (const interestId of createPostDto.interestIds) {
+          const interestItem = await this.interestRepository
+            .createQueryBuilder('interest')
+            .where('interest.idInterest = :id', { id: interestId })
+            .getOne();
+
+          if (interestItem) {
+            interests.push(interestItem);
+          }
+        }
+
+        post.interests = interests;
+      }
+
+      if (createPostDto.userId) {
+        const userEn = await this.userRepository
+          .createQueryBuilder('user')
+          .where('user.idUser = :id', { id: createPostDto.userId })
+          .getOne();
+
+        post.user = userEn;
+      }
+
+      return this.postRepository.save(post);
+    } catch (error) {
+      throw error;
+    }
   }
 
   findAll() {
-    return `This action returns all posts`;
+    try {
+      return this.postRepository.find({
+        relations:{
+          interests: true,
+          user: true
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} post`;
+    try {
+      return this.postRepository.createQueryBuilder('post')
+        .where('post.idPost = :id', { id })
+        .getOne();
+    } catch (error) {
+      throw error;
+    }
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+    try {
+      return this.postRepository.update(id, updatePostDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} post`;
+    try {
+      return this.postRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

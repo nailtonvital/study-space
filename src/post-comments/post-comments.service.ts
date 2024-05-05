@@ -10,26 +10,48 @@ export class PostCommentsService {
 
   constructor(
     @InjectRepository(PostComment)
-    private plantRepository: Repository<PostComment>,
-  ) {}
+    private postCommentRepository: Repository<PostComment>,
+  ) { }
 
   create(createPostCommentDto: CreatePostCommentDto) {
-    return 'This action adds a new postComment';
+    try {
+      return this.postCommentRepository.insert(createPostCommentDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   findAll() {
-    return `This action returns all postComments`;
+    try {
+      return this.postCommentRepository.find();
+    } catch (error) {
+      throw error;
+    }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} postComment`;
+    try {
+      return this.postCommentRepository.createQueryBuilder('postComment')
+        .where('postComment.idPostComment = :id', { id })
+        .getOne();
+    } catch (error) {
+      throw error;
+    }
   }
 
   update(id: number, updatePostCommentDto: UpdatePostCommentDto) {
-    return `This action updates a #${id} postComment`;
+    try {
+      return this.postCommentRepository.update(id, updatePostCommentDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} postComment`;
+    try {
+      return this.postCommentRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

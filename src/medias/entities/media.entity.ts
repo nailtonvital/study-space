@@ -1,5 +1,5 @@
 import { Interest } from "../../interests/entities/interest.entity";
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Media {
@@ -15,6 +15,11 @@ export class Media {
     @Column()
     imageUrl: string;
 
-    @ManyToMany(() => Interest)
+    @ManyToMany(type => Interest)
+    @JoinTable({
+        name: 'interest_media',
+        joinColumn: { name: 'idMedia', referencedColumnName: 'idMedia' },
+        inverseJoinColumn: { name: 'idInterest', referencedColumnName: 'idInterest' }
+    })
     interests: Interest[];
 }
