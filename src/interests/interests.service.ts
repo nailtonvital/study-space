@@ -29,9 +29,10 @@ export class InterestsService {
 
   findOne(id: number) {
     try {
-      return this.interestRepository.createQueryBuilder('interest')
-        .where('interest.idInterest = :id', { id })
-        .getOne();
+      return this.interestRepository.findOne({
+        where: { idInterest: id },
+        relations: ['users', 'medias', 'posts']
+      })
     } catch (error) {
       throw error;
     }

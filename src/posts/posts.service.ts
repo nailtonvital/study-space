@@ -17,6 +17,8 @@ export class PostsService {
     private interestRepository: Repository<Interest>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+
   ) { }
 
   async create(createPostDto: CreatePostDto) {
@@ -40,10 +42,10 @@ export class PostsService {
         post.interests = interests;
       }
 
-      if (createPostDto.userId) {
+      if (createPostDto.idUser) {
         const userEn = await this.userRepository
           .createQueryBuilder('user')
-          .where('user.idUser = :id', { id: createPostDto.userId })
+          .where('user.idUser = :id', { id: createPostDto.idUser })
           .getOne();
 
         post.user = userEn;
@@ -58,7 +60,7 @@ export class PostsService {
   findAll() {
     try {
       return this.postRepository.find({
-        relations:{
+        relations: {
           interests: true,
           user: true
         }
@@ -70,9 +72,10 @@ export class PostsService {
 
   findOne(id: number) {
     try {
-      return this.postRepository.createQueryBuilder('post')
-        .where('post.idPost = :id', { id })
-        .getOne();
+      return this.postRepository.findOne({
+        where: { idPost: id },
+        relations: ['interests', 'user', 'comments', 'likes']
+      });
     } catch (error) {
       throw error;
     }
@@ -93,4 +96,83 @@ export class PostsService {
       throw error;
     }
   }
+
+  addLike(id: number, userId: number) {
+    try {
+      return this.postRepository
+        .createQueryBuilder()
+        .relation(Post, 'likes')
+        .of(id)
+        .add(userId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  removeLike(id: number, userId: number) {
+    try {
+      return this.postRepository
+        .createQueryBuilder()
+        .relation(Post, 'likes')
+        .of(id)
+        .remove(userId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  addComment(id: number, commentId: number) {
+    try {
+      return this.postRepository
+        .createQueryBuilder()
+        .relation(Post, 'comments')
+        .of(id)
+        .add(commentId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  removeComment(id: number, commentId: number) {
+    try {
+      return this.postRepository
+        .createQueryBuilder()
+        .relation(Post, 'comments')
+        .of(id)
+        .remove(commentId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addInterest(id: number, interestId: number) {
+    try {
+      await this.postRepository
+        .createQueryBuilder().insert().into('post_interest')
+        .values({
+          postId: id,
+          interestId: interestId
+        }).execute();
+
+      return this.postRepository.findOne({
+        where: { idPost: id },
+        relations: ['interests']
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  addUser(id: number, userId: number) {
+    try {
+      return this.postRepository
+        .createQueryBuilder()
+        .relation(Post, 'user')
+        .of(id)
+        .add(userId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }

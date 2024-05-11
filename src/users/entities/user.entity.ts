@@ -1,7 +1,8 @@
 import { PostComment } from "../../post-comments/entities/post-comment.entity";
 import { Interest } from "../../interests/entities/interest.entity";
 import { Post } from "../../posts/entities/post.entity";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { MediaUser } from "src/media-user/entities/media-user.entity";
 
 @Entity()
 export class User {
@@ -26,7 +27,7 @@ export class User {
     @Column()
     birthdate: Date;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     createdAt: Date;
 
     @Column()
@@ -40,7 +41,6 @@ export class User {
         name: 'user_interest',
         joinColumn: { name: 'idUser', referencedColumnName: 'idUser' },
         inverseJoinColumn: { name: 'idInterest', referencedColumnName: 'idInterest' }
-
     })
     interests: Interest[];
 
@@ -59,4 +59,15 @@ export class User {
         inverseJoinColumn: { name: 'idPostComment', referencedColumnName: 'idPostComment' }
     })
     comments: PostComment[];
+
+    @ManyToMany(type => Post, post => post.likes)
+    @JoinTable({
+        name: 'post_like',
+        joinColumn: { name: 'idUser', referencedColumnName: 'idUser' },
+        inverseJoinColumn: { name: 'idPost', referencedColumnName: 'idPost' }
+    })
+    likes: Post[];
+
+    @OneToMany(type => MediaUser, mediaUser => mediaUser.user)
+    media: MediaUser[];
 }

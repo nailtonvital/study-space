@@ -13,7 +13,7 @@ export class MediasService {
   ) { }
   create(createMediaDto: CreateMediaDto) {
     try {
-      return this.mediaRepository.insert(createMediaDto);
+      return this.mediaRepository.save(createMediaDto);
     } catch (error) {
       throw error;
     }
@@ -21,7 +21,9 @@ export class MediasService {
 
   findAll() {
     try {
-      return this.mediaRepository.find();
+      return this.mediaRepository.find({
+        relations: ['interests', 'users']
+      });
     } catch (error) {
       throw error;
     }
@@ -29,9 +31,10 @@ export class MediasService {
 
   findOne(id: number) {
     try {
-      return this.mediaRepository.createQueryBuilder('media')
-        .where('media.idMedia = :id', { id })
-        .getOne();
+      return this.mediaRepository.findOne({
+        where: { idMedia: id },
+        relations: ['interests', 'users'],
+      })
     } catch (error) {
       throw error;
     }
@@ -47,7 +50,7 @@ export class MediasService {
 
   remove(id: number) {
     try {
-      return this.mediaRepository.delete(id);
+      return this.mediaRepository.delete({ idMedia: id });
     } catch (error) {
       throw error;
     }

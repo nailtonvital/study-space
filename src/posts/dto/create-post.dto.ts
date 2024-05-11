@@ -23,15 +23,9 @@ export class CreatePostDto {
     @IsNumber()
     readonly commentsCount: number;
 
-    @ApiProperty({ type: Date })
-    readonly createdAt: Date;
-
-    @ApiProperty({ type: Date })
-    readonly updatedAt: Date;
-
     @ApiProperty()
     @IsNumber()
-    readonly userId: number;
+    readonly idUser: number;
 
     @ApiProperty({ type: [Number] })
     @IsOptional()

@@ -56,10 +56,10 @@ export class UsersService {
 
   findOne(id: number) {
     try {
-      return this.userRepository.createQueryBuilder('user')
-        .leftJoinAndSelect('user.interests', 'interest')
-        .where('user.idUser = :id', { id })
-        .getOne()
+      return this.userRepository.findOne({
+        where: { idUser: id },
+        relations: ['interests'],
+      })
     } catch (error) {
       throw error;
     }

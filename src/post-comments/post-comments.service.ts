@@ -15,7 +15,7 @@ export class PostCommentsService {
 
   create(createPostCommentDto: CreatePostCommentDto) {
     try {
-      return this.postCommentRepository.insert(createPostCommentDto);
+      return this.postCommentRepository.save(createPostCommentDto);
     } catch (error) {
       throw error;
     }
@@ -23,7 +23,9 @@ export class PostCommentsService {
 
   findAll() {
     try {
-      return this.postCommentRepository.find();
+      return this.postCommentRepository.find({
+        relations: ['user', 'post']
+      });
     } catch (error) {
       throw error;
     }
@@ -31,9 +33,10 @@ export class PostCommentsService {
 
   findOne(id: number) {
     try {
-      return this.postCommentRepository.createQueryBuilder('postComment')
-        .where('postComment.idPostComment = :id', { id })
-        .getOne();
+      return this.postCommentRepository.findOne({
+        where: { idPostComment: id },
+        relations: ['user', 'post']
+      })
     } catch (error) {
       throw error;
     }
@@ -49,7 +52,7 @@ export class PostCommentsService {
 
   remove(id: number) {
     try {
-      return this.postCommentRepository.delete(id);
+      return this.postCommentRepository.delete({ idPostComment: id });
     } catch (error) {
       throw error;
     }

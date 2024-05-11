@@ -1,7 +1,7 @@
 import { PostComment } from "../../post-comments/entities/post-comment.entity";
 import { Interest } from "../../interests/entities/interest.entity";
 import { User } from "../../users/entities/user.entity";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Post {
@@ -18,18 +18,20 @@ export class Post {
     imageUrl: string;
 
     @Column()
-    likesCount: number;
-
-    @Column()
     commentsCount: number;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     createdAt: Date;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn()
     updatedAt: Date;
 
     @ManyToOne(type => User, user => user.posts)
+    @JoinTable({
+        name: 'post',
+        joinColumn: { name: 'idUser', referencedColumnName: 'idUser' },
+        inverseJoinColumn: { name: 'idPost', referencedColumnName: 'idPost' }
+    })
     user: User;
 
     @ManyToMany(type => Interest, interest => interest.posts)
@@ -47,4 +49,12 @@ export class Post {
         inverseJoinColumn: { name: 'idPostComment', referencedColumnName: 'idPostComment' }
     })
     comments: PostComment[];
+
+    @ManyToMany(type => User, user => user.likes)
+    @JoinTable({
+        name: 'post_like',
+        joinColumn: { name: 'idPost', referencedColumnName: 'idPost' },
+        inverseJoinColumn: { name: 'idUser', referencedColumnName: 'idUser' }
+    })
+    likes: User[];
 }

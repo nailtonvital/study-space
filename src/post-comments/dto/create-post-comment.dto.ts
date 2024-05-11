@@ -4,19 +4,13 @@ import { IsString, IsDate, IsNumber } from 'class-validator';
 export class CreatePostCommentDto {
     @ApiProperty()
     @IsString()
-    readonly text: string;
-
-    @ApiProperty({ type: Date })
-    readonly createdAt: Date;
-
-    @ApiProperty({ type: Date })
-    readonly updatedAt: Date;
+    text: string;
 
     @ApiProperty()
     @IsNumber()
-    readonly postId: number;
+    postId: number;
 
     @ApiProperty()
     @IsNumber()
-    readonly userId: number;
+    userId: number;
 }

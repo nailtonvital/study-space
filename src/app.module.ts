@@ -8,6 +8,7 @@ import { InterestsModule } from './interests/interests.module';
 import { PostCommentsModule } from './post-comments/post-comments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { MediaUserModule } from './media-user/media-user.module';
 
 @Module({
   imports: [
@@ -26,10 +27,9 @@ import { ConfigModule } from '@nestjs/config';
         synchronize: true,
         entities: ['dist/**/*.entity{.ts,.js}'],
         autoLoadEntities: true,
-        debug: true,
       })
     }),
-    UsersModule, PostsModule, MediasModule, InterestsModule, PostCommentsModule],
+    UsersModule, PostsModule, MediasModule, InterestsModule, PostCommentsModule, MediaUserModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -5,30 +5,50 @@ import { UpdatePostCommentDto } from './dto/update-post-comment.dto';
 
 @Controller('post-comments')
 export class PostCommentsController {
-  constructor(private readonly postCommentsService: PostCommentsService) {}
+  constructor(private readonly postCommentsService: PostCommentsService) { }
 
   @Post()
   create(@Body() createPostCommentDto: CreatePostCommentDto) {
-    return this.postCommentsService.create(createPostCommentDto);
+    try {
+      return this.postCommentsService.create(createPostCommentDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Get()
   findAll() {
-    return this.postCommentsService.findAll();
+    try {
+      return this.postCommentsService.findAll();
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.postCommentsService.findOne(+id);
+    try {
+      return this.postCommentsService.findOne(+id);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostCommentDto: UpdatePostCommentDto) {
-    return this.postCommentsService.update(+id, updatePostCommentDto);
+    try {
+      return this.postCommentsService.update(+id, updatePostCommentDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.postCommentsService.remove(+id);
+    try {
+      return this.postCommentsService.remove(+id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

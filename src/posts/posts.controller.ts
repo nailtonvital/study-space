@@ -5,30 +5,50 @@ import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(private readonly postsService: PostsService) { }
 
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+    try {
+      return this.postsService.create(createPostDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Get()
   findAll() {
-    return this.postsService.findAll();
+    try {
+      return this.postsService.findAll();
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
+    try {
+      return this.postsService.findOne(+id);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(+id, updatePostDto);
+    try {
+      return this.postsService.update(+id, updatePostDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.postsService.remove(+id);
+    try {
+      return this.postsService.remove(+id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

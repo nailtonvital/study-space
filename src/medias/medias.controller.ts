@@ -5,30 +5,50 @@ import { UpdateMediaDto } from './dto/update-media.dto';
 
 @Controller('medias')
 export class MediasController {
-  constructor(private readonly mediasService: MediasService) {}
+  constructor(private readonly mediasService: MediasService) { }
 
   @Post()
   create(@Body() createMediaDto: CreateMediaDto) {
-    return this.mediasService.create(createMediaDto);
+    try {
+      return this.mediasService.create(createMediaDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Get()
   findAll() {
-    return this.mediasService.findAll();
+    try {
+      return this.mediasService.findAll();
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.mediasService.findOne(+id);
+    try {
+      return this.mediasService.findOne(+id);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMediaDto: UpdateMediaDto) {
-    return this.mediasService.update(+id, updateMediaDto);
+    try {
+      return this.mediasService.update(+id, updateMediaDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.mediasService.remove(+id);
+    try {
+      return this.mediasService.remove(+id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

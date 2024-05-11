@@ -7,9 +7,10 @@ import { PostComment } from '../post-comments/entities/post-comment.entity';
 import { Interest } from '../interests/entities/interest.entity';
 import { Media } from '../medias/entities/media.entity';
 import { User } from '../users/entities/user.entity';
+import { PostCommentsModule } from 'src/post-comments/post-comments.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, User, Media, Interest, PostComment])],
+  imports: [TypeOrmModule.forFeature([Post, User, Media, Interest, PostComment]), PostCommentsModule],
   controllers: [PostsController],
   providers: [PostsService],
 })
