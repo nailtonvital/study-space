@@ -1,3 +1,4 @@
+import { InterestsService } from './../interests/interests.service';
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -17,6 +18,9 @@ export class PostsService {
     private interestRepository: Repository<Interest>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+    @InjectRepository(Interest)
+    private InterestsService: InterestsService
 
 
   ) { }
@@ -40,15 +44,6 @@ export class PostsService {
         }
 
         post.interests = interests;
-      }
-
-      if (createPostDto.idUser) {
-        const userEn = await this.userRepository
-          .createQueryBuilder('user')
-          .where('user.idUser = :id', { id: createPostDto.idUser })
-          .getOne();
-
-        post.user = userEn;
       }
 
       return this.postRepository.save(post);

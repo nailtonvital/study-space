@@ -8,10 +8,11 @@ import { Interest } from '../interests/entities/interest.entity';
 import { Media } from '../medias/entities/media.entity';
 import { User } from '../users/entities/user.entity';
 import { PostCommentsModule } from 'src/post-comments/post-comments.module';
+import { InterestsModule } from 'src/interests/interests.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, User, Media, Interest, PostComment]), PostCommentsModule],
+  imports: [TypeOrmModule.forFeature([Post, User, Media, Interest, PostComment]), PostCommentsModule, InterestsModule],
   controllers: [PostsController],
   providers: [PostsService],
 })
-export class PostsModule {}
+export class PostsModule { }
