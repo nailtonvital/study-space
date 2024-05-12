@@ -16,7 +16,7 @@ export class Media {
     @Column()
     imageUrl: string;
 
-    @ManyToMany(type => Interest)
+    @ManyToMany(type => Interest, interest => interest.medias)
     @JoinTable({
         name: 'interest_media',
         joinColumn: { name: 'idMedia', referencedColumnName: 'idMedia' },

@@ -11,5 +11,6 @@ import { Post } from '../posts/entities/post.entity';
   imports: [TypeOrmModule.forFeature([Interest, User, Media, Post])],
   controllers: [InterestsController],
   providers: [InterestsService],
+  exports: [InterestsService]
 })
 export class InterestsModule { }

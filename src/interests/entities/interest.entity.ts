@@ -1,6 +1,6 @@
 import { User } from 'src/users/entities/user.entity';
 import { Media } from '../../medias/entities/media.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinTable, JoinColumn } from 'typeorm';
 import { Post } from 'src/posts/entities/post.entity';
 
 @Entity()
@@ -12,11 +12,7 @@ export class Interest {
     text: string;
 
     @ManyToMany(type=> Media, media => media.interests)
-    @JoinTable({
-        name: 'interest_media',
-        joinColumn: { name: 'idInterest', referencedColumnName: 'idInterest' },
-        inverseJoinColumn: { name: 'idMedia', referencedColumnName: 'idMedia' }
-    })
+    @JoinColumn({ name: 'idMedia', referencedColumnName: 'idMedia', foreignKeyConstraintName: 'media_interest'})
     medias: Media[];
 
     @ManyToMany(type=> User, user => user.interests)

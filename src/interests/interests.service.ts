@@ -21,7 +21,9 @@ export class InterestsService {
 
   findAll() {
     try {
-      return this.interestRepository.find();
+      return this.interestRepository.find({
+        relations: ['users', 'medias', 'posts']
+      });
     } catch (error) {
       throw error;
     }
@@ -49,6 +51,18 @@ export class InterestsService {
   remove(id: number) {
     try {
       return this.interestRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addInterstMedia(id: number, idMedia: number) {
+    try {
+      return await this.interestRepository
+        .createQueryBuilder()
+        .relation(Interest, 'medias')
+        .of(id)
+        .add(idMedia);
     } catch (error) {
       throw error;
     }

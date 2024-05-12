@@ -6,10 +6,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Interest } from '../interests/entities/interest.entity';
 import { Post } from '../posts/entities/post.entity';
 import { User } from '../users/entities/user.entity';
+import { InterestsModule } from 'src/interests/interests.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Media, User, Post, Interest])],
+  imports: [TypeOrmModule.forFeature([Media, User, Post, Interest]), InterestsModule],
   controllers: [MediasController],
   providers: [MediasService],
 })
-export class MediasModule {}
+export class MediasModule { }
