@@ -8,10 +8,10 @@ export class Post {
     @PrimaryGeneratedColumn()
     idPost: number;
 
-    @Column()
+    @Column({ length: 45 })
     title: string;
 
-    @Column()
+    @Column({ type: 'text' })
     text: string;
 
     @Column()
