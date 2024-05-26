@@ -6,18 +6,24 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Media } from './entities/media.entity';
 import { InterestsService } from 'src/interests/interests.service';
 import { Interest } from 'src/interests/entities/interest.entity';
+import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class MediasService {
   constructor(
     @InjectRepository(Media)
     private mediaRepository: Repository<Media>,
-
+    private userRepository: UsersService,
     private interestService: InterestsService
   ) { }
   async create(createMediaDto: CreateMediaDto) {
     try {
       const interests = [];
+      let user = null;
+      if (createMediaDto.userId) {
+        user = await this.userRepository.findOne(createMediaDto.userId);
+      }
       if (createMediaDto.interestIds && createMediaDto.interestIds.length > 0) {
 
         for (const interestId of createMediaDto.interestIds) {
@@ -29,7 +35,7 @@ export class MediasService {
         }
       }
 
-      return this.mediaRepository.save({ ...createMediaDto, interests });
+      return this.mediaRepository.save({ ...createMediaDto, interests});
     } catch (error) {
       throw error;
     }
@@ -38,10 +44,9 @@ export class MediasService {
   async findAll() {
     try {
 
-      return this.mediaRepository.createQueryBuilder('media')
-        .leftJoinAndSelect('media.interests', 'interests')
-        .leftJoinAndSelect('media.users', 'users')
-        .getMany();
+      return this.mediaRepository.find({
+        relations: ['interests', 'users'],
+      });
     } catch (error) {
       throw error;
     }

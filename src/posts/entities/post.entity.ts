@@ -35,26 +35,11 @@ export class Post {
     user: User;
 
     @ManyToMany(type => Interest, interest => interest.posts)
-    @JoinTable({
-        name: 'post_interest',
-        joinColumn: { name: 'idPost', referencedColumnName: 'idPost' },
-        inverseJoinColumn: { name: 'idInterest', referencedColumnName: 'idInterest' }
-    })
-    interests: Interest[];
+    public interests: Interest[];
 
     @OneToMany(type => PostComment, postComment => postComment.post)
-    @JoinTable({
-        name: 'post_comment',
-        joinColumn: { name: 'idPost', referencedColumnName: 'idPost' },
-        inverseJoinColumn: { name: 'idPostComment', referencedColumnName: 'idPostComment' }
-    })
-    comments: PostComment[];
+    public comments: PostComment[];
 
     @ManyToMany(type => User, user => user.likes)
-    @JoinTable({
-        name: 'post_like',
-        joinColumn: { name: 'idPost', referencedColumnName: 'idPost' },
-        inverseJoinColumn: { name: 'idUser', referencedColumnName: 'idUser' }
-    })
-    likes: User[];
+    public likes: User[];
 }

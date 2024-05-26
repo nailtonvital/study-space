@@ -11,17 +11,17 @@ export class InterestsService {
     @InjectRepository(Interest)
     private interestRepository: Repository<Interest>,
   ) { }
-  create(createInterestDto: CreateInterestDto) {
+  async create(createInterestDto: CreateInterestDto) {
     try {
-      return this.interestRepository.insert(createInterestDto);
+      return await this.interestRepository.insert(createInterestDto);
     } catch (error) {
       throw error;
     }
   }
 
-  findAll() {
+  async findAll() {
     try {
-      return this.interestRepository.find({
+      return await this.interestRepository.find({
         relations: ['users', 'medias', 'posts']
       });
     } catch (error) {
@@ -29,9 +29,9 @@ export class InterestsService {
     }
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     try {
-      return this.interestRepository.findOne({
+      return await this.interestRepository.findOne({
         where: { idInterest: id },
         relations: ['users', 'medias', 'posts']
       })
@@ -40,17 +40,17 @@ export class InterestsService {
     }
   }
 
-  update(id: number, updateInterestDto: UpdateInterestDto) {
+  async update(id: number, updateInterestDto: UpdateInterestDto) {
     try {
-      return this.interestRepository.update(id, updateInterestDto);
+      return await this.interestRepository.update(id, updateInterestDto);
     } catch (error) {
       throw error;
     }
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     try {
-      return this.interestRepository.delete(id);
+      return await this.interestRepository.delete(id);
     } catch (error) {
       throw error;
     }

@@ -44,9 +44,9 @@ export class UsersService {
     }
   }
 
-  findAll() {
+  async findAll() {
     try {
-      return this.userRepository.find({
+      return await this.userRepository.find({
         relations: { interests: true },
       });
     } catch (error) {
@@ -54,30 +54,42 @@ export class UsersService {
     }
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     try {
-      return this.userRepository.findOne({
+      return await this.userRepository.findOne({
         where: { idUser: id },
-        relations: ['interests'],
+        relations: ['interests', 'posts'],
       })
     } catch (error) {
       throw error;
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     try {
-      return this.userRepository.update(id, updateUserDto);
+      return await this.userRepository.update(id, updateUserDto);
     } catch (error) {
       throw error;
     }
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     try {
-      return this.userRepository.delete(id);
+      return await this.userRepository.delete(id);
     } catch (error) {
       throw error;
     }
   }
+
+  // async listPosts(id: number) {
+  //   try {
+  //     const user = await this.userRepository.findOne({
+  //       where: { idUser: id },
+  //       relations: ['posts'],
+  //     });
+  //     return user.posts;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }

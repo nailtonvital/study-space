@@ -4,26 +4,37 @@ import { UpdatePostCommentDto } from './dto/update-post-comment.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostComment } from './entities/post-comment.entity';
+import { UsersService } from 'src/users/users.service';
+import { PostsService } from 'src/posts/posts.service';
 
 @Injectable()
 export class PostCommentsService {
 
+
   constructor(
     @InjectRepository(PostComment)
     private postCommentRepository: Repository<PostComment>,
+    private readonly userRepository: UsersService,
+    private readonly postService: PostsService
   ) { }
 
-  create(createPostCommentDto: CreatePostCommentDto) {
+  async create(createPostCommentDto: CreatePostCommentDto) {
     try {
-      return this.postCommentRepository.save(createPostCommentDto);
+      if (createPostCommentDto.userId && createPostCommentDto.postId) {
+        let user = await this.userRepository.findOne(createPostCommentDto.userId);
+        let post = await this.postService.findOne(createPostCommentDto.postId);
+
+        return await this.postCommentRepository.save({ ...createPostCommentDto, user, post });
+      }
+      // return this.postCommentRepository.save(createPostCommentDto);
     } catch (error) {
       throw error;
     }
   }
 
-  findAll() {
+  async findAll() {
     try {
-      return this.postCommentRepository.find({
+      return await this.postCommentRepository.find({
         relations: ['user', 'post']
       });
     } catch (error) {
@@ -31,9 +42,9 @@ export class PostCommentsService {
     }
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     try {
-      return this.postCommentRepository.findOne({
+      return await this.postCommentRepository.findOne({
         where: { idPostComment: id },
         relations: ['user', 'post']
       })
@@ -42,17 +53,17 @@ export class PostCommentsService {
     }
   }
 
-  update(id: number, updatePostCommentDto: UpdatePostCommentDto) {
+  async update(id: number, updatePostCommentDto: UpdatePostCommentDto) {
     try {
-      return this.postCommentRepository.update(id, updatePostCommentDto);
+      return await this.postCommentRepository.update(id, updatePostCommentDto);
     } catch (error) {
       throw error;
     }
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     try {
-      return this.postCommentRepository.delete({ idPostComment: id });
+      return await this.postCommentRepository.delete({ idPostComment: id });
     } catch (error) {
       throw error;
     }

@@ -25,5 +25,10 @@ export class Media {
     interests: Interest[];
 
     @OneToMany(type => MediaUser, mediaUser => mediaUser.media)
+    @JoinTable({
+        name: 'media_user',
+        joinColumn: { name: 'idMedia', referencedColumnName: 'idMedia' },
+        inverseJoinColumn: { name: 'idUser', referencedColumnName: 'idUser' }
+    })
     users: MediaUser[];
 }
