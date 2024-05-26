@@ -8,45 +8,65 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) { }
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
+  async create(@Body() createPostDto: CreatePostDto) {
     try {
-      return this.postsService.create(createPostDto);
+      return await this.postsService.create(createPostDto);
     } catch (error) {
       throw error;
     }
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     try {
-      return this.postsService.findAll();
+      return await this.postsService.findAll();
     } catch (error) {
       throw error;
     }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     try {
-      return this.postsService.findOne(+id);
+      return await this.postsService.findOne(+id);
     } catch (error) {
       throw error;
     }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+  async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     try {
-      return this.postsService.update(+id, updatePostDto);
+      return await this.postsService.update(+id, updatePostDto);
     } catch (error) {
       throw error;
     }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     try {
-      return this.postsService.remove(+id);
+      return await this.postsService.remove(+id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Post('post/addLike')
+  async addLike(@Body() body) {
+    const { idPost, idUser } = body;
+    try {
+      return await this.postsService.addLike(idPost, idUser);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Post('post/removeLike')
+  async removeLike(@Body() body) {
+    const { idPost, idUser } = body;
+    try {
+      return await this.postsService.removeLike(idPost, idUser);
     } catch (error) {
       throw error;
     }

@@ -27,10 +27,18 @@ export class PostsService {
 
   async create(createPostDto: CreatePostDto) {
     try {
-      const post = this.postRepository.create(createPostDto);
+      // const post = await this.postRepository.create(createPostDto);
+
+      const interests = [];
+      let user = null;
+
+      if (createPostDto.idUser) {
+        user = await this.userRepository.findOne({
+          where: { idUser: createPostDto.idUser }
+        })
+      }
 
       if (createPostDto.interestIds && createPostDto.interestIds.length > 0) {
-        const interests = [];
 
         for (const interestId of createPostDto.interestIds) {
           const interestItem = await this.interestRepository
@@ -42,19 +50,17 @@ export class PostsService {
             interests.push(interestItem);
           }
         }
-
-        post.interests = interests;
       }
 
-      return this.postRepository.save(post);
+      return this.postRepository.save({ ...createPostDto, interests, user });
     } catch (error) {
       throw error;
     }
   }
 
-  findAll() {
+  async findAll() {
     try {
-      return this.postRepository.find({
+      return await this.postRepository.find({
         relations: {
           interests: true,
           user: true
@@ -65,9 +71,9 @@ export class PostsService {
     }
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     try {
-      return this.postRepository.findOne({
+      return await this.postRepository.findOne({
         where: { idPost: id },
         relations: ['interests', 'user', 'comments', 'likes']
       });
@@ -76,25 +82,25 @@ export class PostsService {
     }
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
+  async update(id: number, updatePostDto: UpdatePostDto) {
     try {
-      return this.postRepository.update(id, updatePostDto);
+      return await this.postRepository.update(id, updatePostDto);
     } catch (error) {
       throw error;
     }
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     try {
-      return this.postRepository.delete(id);
+      return await this.postRepository.delete(id);
     } catch (error) {
       throw error;
     }
   }
 
-  addLike(id: number, userId: number) {
+  async addLike(id: number, userId: number) {
     try {
-      return this.postRepository
+      return await this.postRepository
         .createQueryBuilder()
         .relation(Post, 'likes')
         .of(id)
@@ -104,13 +110,26 @@ export class PostsService {
     }
   }
 
-  removeLike(id: number, userId: number) {
+  async removeLike(id: number, userId: number) {
     try {
       return this.postRepository
         .createQueryBuilder()
         .relation(Post, 'likes')
         .of(id)
         .remove(userId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async listComments(id: number) {
+    try {
+      const post = await this.postRepository.findOne({
+        where: { idPost: id },
+        relations: ['comments']
+      });
+
+      return post.comments;
     } catch (error) {
       throw error;
     }
@@ -140,6 +159,19 @@ export class PostsService {
     }
   }
 
+  async listInterests(id: number) {
+    try {
+      const post = await this.postRepository.findOne({
+        where: { idPost: id },
+        relations: ['interests']
+      });
+
+      return post.interests;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async addInterest(id: number, interestId: number) {
     try {
       await this.postRepository
@@ -158,16 +190,16 @@ export class PostsService {
     }
   }
 
-  addUser(id: number, userId: number) {
-    try {
-      return this.postRepository
-        .createQueryBuilder()
-        .relation(Post, 'user')
-        .of(id)
-        .add(userId);
-    } catch (error) {
-      throw error;
-    }
-  }
+  // addUser(id: number, userId: number) {
+  //   try {
+  //     return this.postRepository
+  //       .createQueryBuilder()
+  //       .relation(Post, 'user')
+  //       .of(id)
+  //       .add(userId);
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
 }

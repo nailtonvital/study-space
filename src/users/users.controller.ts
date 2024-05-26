@@ -8,7 +8,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     try {
       return this.usersService.create(createUserDto);
     } catch (error) {
@@ -17,38 +17,48 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     try {
-      return this.usersService.findAll();
+      return await this.usersService.findAll();
     } catch (error) {
       throw error;
     }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     try {
-      return this.usersService.findOne(+id);
+      return await this.usersService.findOne(+id);
     } catch (error) {
       throw error;
     }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {
-      return this.usersService.update(+id, updateUserDto);
+      return await this.usersService.update(+id, updateUserDto);
     } catch (error) {
       throw error;
     }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     try {
-      return this.usersService.remove(+id);
+      return await this.usersService.remove(+id);
     } catch (error) {
       throw error;
     }
   }
+
+  // @Get(':id/posts')
+  // listPosts(@Param('id') id: string) {
+  //   try {
+  //     return this.usersService.listPosts(+id);
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+  
 }
