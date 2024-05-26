@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Interest } from '../interests/entities/interest.entity';
 import { parse } from 'path';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
@@ -15,6 +16,7 @@ export class UsersService {
     private userRepository: Repository<User>,
     @InjectRepository(Interest)
     private interestRepository: Repository<Interest>,
+    private jwtService: JwtService,
   ) { }
 
   async create(createUserDto: CreateUserDto) {
@@ -44,9 +46,9 @@ export class UsersService {
     }
   }
 
-  findAll() {
+  async findAll() {
     try {
-      return this.userRepository.find({
+      return await this.userRepository.find({
         relations: { interests: true },
       });
     } catch (error) {
@@ -54,10 +56,10 @@ export class UsersService {
     }
   }
 
-  findOne(id: number) {
+  async findOne(email: string) {
     try {
-      return this.userRepository.findOne({
-        where: { idUser: id },
+      return await this.userRepository.findOne({
+        where: { email: email },
         relations: ['interests'],
       })
     } catch (error) {
@@ -65,19 +67,41 @@ export class UsersService {
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  async auth(email, password) {
     try {
-      return this.userRepository.update(id, updateUserDto);
+      const emailItem = await this.userRepository.findOne({
+        where: { email: email },
+      })
+      if (emailItem.password === password) {
+        this.generateToken(emailItem);
+      }
+      return null;
     } catch (error) {
       throw error;
     }
   }
 
-  remove(id: number) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     try {
-      return this.userRepository.delete(id);
+      return await this.userRepository.update(id, updateUserDto);
     } catch (error) {
       throw error;
     }
   }
+
+  async remove(id: number) {
+    try {
+      return await this.userRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  generateToken(user: User) {
+    const payload = { email: user.email, sub: user.idUser };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+
 }
