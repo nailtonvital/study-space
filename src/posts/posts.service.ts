@@ -18,10 +18,8 @@ export class PostsService {
     private interestRepository: Repository<Interest>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-
     @InjectRepository(Interest)
     private InterestsService: InterestsService
-
 
   ) { }
 
@@ -52,9 +50,9 @@ export class PostsService {
     }
   }
 
-  findAll() {
+  async findAll() {
     try {
-      return this.postRepository.find({
+      return await this.postRepository.find({
         relations: {
           interests: true,
           user: true
@@ -65,9 +63,9 @@ export class PostsService {
     }
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     try {
-      return this.postRepository.findOne({
+      return await this.postRepository.findOne({
         where: { idPost: id },
         relations: ['interests', 'user', 'comments', 'likes']
       });
@@ -76,25 +74,25 @@ export class PostsService {
     }
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
+  async update(id: number, updatePostDto: UpdatePostDto) {
     try {
-      return this.postRepository.update(id, updatePostDto);
+      return await this.postRepository.update(id, updatePostDto);
     } catch (error) {
       throw error;
     }
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     try {
-      return this.postRepository.delete(id);
+      return await this.postRepository.delete(id);
     } catch (error) {
       throw error;
     }
   }
 
-  addLike(id: number, userId: number) {
+  async addLike(id: number, userId: number) {
     try {
-      return this.postRepository
+      return await this.postRepository
         .createQueryBuilder()
         .relation(Post, 'likes')
         .of(id)
@@ -104,9 +102,9 @@ export class PostsService {
     }
   }
 
-  removeLike(id: number, userId: number) {
+  async removeLike(id: number, userId: number) {
     try {
-      return this.postRepository
+      return await this.postRepository
         .createQueryBuilder()
         .relation(Post, 'likes')
         .of(id)
@@ -116,9 +114,9 @@ export class PostsService {
     }
   }
 
-  addComment(id: number, commentId: number) {
+  async addComment(id: number, commentId: number) {
     try {
-      return this.postRepository
+      return await this.postRepository
         .createQueryBuilder()
         .relation(Post, 'comments')
         .of(id)
@@ -128,9 +126,9 @@ export class PostsService {
     }
   }
 
-  removeComment(id: number, commentId: number) {
+  async removeComment(id: number, commentId: number) {
     try {
-      return this.postRepository
+      return await this.postRepository
         .createQueryBuilder()
         .relation(Post, 'comments')
         .of(id)
@@ -149,7 +147,7 @@ export class PostsService {
           interestId: interestId
         }).execute();
 
-      return this.postRepository.findOne({
+      return await this.postRepository.findOne({
         where: { idPost: id },
         relations: ['interests']
       });
@@ -158,9 +156,9 @@ export class PostsService {
     }
   }
 
-  addUser(id: number, userId: number) {
+  async addUser(id: number, userId: number) {
     try {
-      return this.postRepository
+      return await this.postRepository
         .createQueryBuilder()
         .relation(Post, 'user')
         .of(id)
@@ -169,5 +167,4 @@ export class PostsService {
       throw error;
     }
   }
-
 }

@@ -28,7 +28,7 @@ export class UsersController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     try {
-      return this.usersService.findOne(+id);
+      return this.usersService.findOneById(+id);
     } catch (error) {
       throw error;
     }

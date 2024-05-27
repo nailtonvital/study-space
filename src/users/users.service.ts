@@ -67,10 +67,21 @@ export class UsersService {
     }
   }
 
+  async findOneById(id: number) {
+    try {
+      return await this.userRepository.findOne({
+        where: { idUser: id },
+        relations: ['interests'],
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async auth(email, password) {
     try {
       const emailItem = await this.userRepository.findOne({
-        where: { email: email },
+        where: { email: email }
       })
       if (emailItem.password === password) {
         this.generateToken(emailItem);
