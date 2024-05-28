@@ -25,10 +25,18 @@ export class PostsService {
 
   async create(createPostDto: CreatePostDto) {
     try {
-      const post = this.postRepository.create(createPostDto);
+      // const post = await this.postRepository.create(createPostDto);
+
+      const interests = [];
+      let user = null;
+
+      if (createPostDto.idUser) {
+        user = await this.userRepository.findOne({
+          where: { idUser: createPostDto.idUser }
+        })
+      }
 
       if (createPostDto.interestIds && createPostDto.interestIds.length > 0) {
-        const interests = [];
 
         for (const interestId of createPostDto.interestIds) {
           const interestItem = await this.interestRepository
@@ -40,11 +48,9 @@ export class PostsService {
             interests.push(interestItem);
           }
         }
-
-        post.interests = interests;
       }
 
-      return this.postRepository.save(post);
+      return this.postRepository.save({ ...createPostDto, interests, user });
     } catch (error) {
       throw error;
     }
@@ -114,6 +120,20 @@ export class PostsService {
     }
   }
 
+
+  async listComments(id: number) {
+    try {
+      const post = await this.postRepository.findOne({
+        where: { idPost: id },
+        relations: ['comments']
+      });
+
+      return post.comments;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async addComment(id: number, commentId: number) {
     try {
       return await this.postRepository
@@ -138,6 +158,19 @@ export class PostsService {
     }
   }
 
+  async listInterests(id: number) {
+    try {
+      const post = await this.postRepository.findOne({
+        where: { idPost: id },
+        relations: ['interests']
+      });
+
+      return post.interests;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async addInterest(id: number, interestId: number) {
     try {
       await this.postRepository
@@ -156,15 +189,16 @@ export class PostsService {
     }
   }
 
-  async addUser(id: number, userId: number) {
-    try {
-      return await this.postRepository
-        .createQueryBuilder()
-        .relation(Post, 'user')
-        .of(id)
-        .add(userId);
-    } catch (error) {
-      throw error;
-    }
-  }
+  // addUser(id: number, userId: number) {
+  //   try {
+  //     return this.postRepository
+  //       .createQueryBuilder()
+  //       .relation(Post, 'user')
+  //       .of(id)
+  //       .add(userId);
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
 }

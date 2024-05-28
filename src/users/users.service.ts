@@ -56,6 +56,7 @@ export class UsersService {
     }
   }
 
+
   async findOne(email: string) {
     try {
       return await this.userRepository.findOne({
@@ -108,11 +109,25 @@ export class UsersService {
     }
   }
 
+
+  // async listPosts(id: number) {
+  //   try {
+  //     const user = await this.userRepository.findOne({
+  //       where: { idUser: id },
+  //       relations: ['posts'],
+  //     });
+  //     return user.posts;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
   generateToken(user: User) {
     const payload = { email: user.email, sub: user.idUser };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
+
 
 }

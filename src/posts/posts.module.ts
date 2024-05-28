@@ -9,10 +9,12 @@ import { Media } from '../medias/entities/media.entity';
 import { User } from '../users/entities/user.entity';
 import { PostCommentsModule } from 'src/post-comments/post-comments.module';
 import { InterestsModule } from 'src/interests/interests.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, User, Media, Interest, PostComment]), PostCommentsModule, InterestsModule],
+  imports: [TypeOrmModule.forFeature([Post, User, Media, Interest, PostComment]), PostCommentsModule, InterestsModule, UsersModule],
   controllers: [PostsController],
   providers: [PostsService],
+  exports: [PostsService]
 })
 export class PostsModule { }

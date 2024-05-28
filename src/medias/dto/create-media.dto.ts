@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsArray } from 'class-validator';
+import { IsString, IsArray, IsNumber } from 'class-validator';
 
 export class CreateMediaDto {
     @ApiProperty()
@@ -17,4 +17,8 @@ export class CreateMediaDto {
     @ApiProperty({ type: [Number] })
     @IsArray()
     readonly interestIds: number[];
+
+    @ApiProperty()
+    @IsNumber()
+    readonly userId: number;
 }

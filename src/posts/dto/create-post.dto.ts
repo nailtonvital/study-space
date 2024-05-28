@@ -30,5 +30,5 @@ export class CreatePostDto {
     @ApiProperty({ type: [Number] })
     @IsOptional()
     @IsNumber({}, { each: true })
-    readonly interestIds: CreateInterestDto[];
+    readonly interestIds: number[];
 }
