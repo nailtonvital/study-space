@@ -18,10 +18,8 @@ export class PostsService {
     private interestRepository: Repository<Interest>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-
     @InjectRepository(Interest)
     private InterestsService: InterestsService
-
 
   ) { }
 
@@ -112,7 +110,7 @@ export class PostsService {
 
   async removeLike(id: number, userId: number) {
     try {
-      return this.postRepository
+      return await this.postRepository
         .createQueryBuilder()
         .relation(Post, 'likes')
         .of(id)
@@ -121,6 +119,7 @@ export class PostsService {
       throw error;
     }
   }
+
 
   async listComments(id: number) {
     try {
@@ -135,9 +134,9 @@ export class PostsService {
     }
   }
 
-  addComment(id: number, commentId: number) {
+  async addComment(id: number, commentId: number) {
     try {
-      return this.postRepository
+      return await this.postRepository
         .createQueryBuilder()
         .relation(Post, 'comments')
         .of(id)
@@ -147,9 +146,9 @@ export class PostsService {
     }
   }
 
-  removeComment(id: number, commentId: number) {
+  async removeComment(id: number, commentId: number) {
     try {
-      return this.postRepository
+      return await this.postRepository
         .createQueryBuilder()
         .relation(Post, 'comments')
         .of(id)
@@ -181,7 +180,7 @@ export class PostsService {
           interestId: interestId
         }).execute();
 
-      return this.postRepository.findOne({
+      return await this.postRepository.findOne({
         where: { idPost: id },
         relations: ['interests']
       });

@@ -28,7 +28,7 @@ export class UsersController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
-      return await this.usersService.findOne(+id);
+      return await this.usersService.findOneById(+id);
     } catch (error) {
       throw error;
     }

@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Interest } from '../interests/entities/interest.entity';
 import { parse } from 'path';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
@@ -15,6 +16,7 @@ export class UsersService {
     private userRepository: Repository<User>,
     @InjectRepository(Interest)
     private interestRepository: Repository<Interest>,
+    private jwtService: JwtService,
   ) { }
 
   async create(createUserDto: CreateUserDto) {
@@ -54,12 +56,38 @@ export class UsersService {
     }
   }
 
-  async findOne(id: number) {
+
+  async findOne(email: string) {
+    try {
+      return await this.userRepository.findOne({
+        where: { email: email },
+        relations: ['interests'],
+      })
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findOneById(id: number) {
     try {
       return await this.userRepository.findOne({
         where: { idUser: id },
-        relations: ['interests', 'posts'],
+        relations: ['interests'],
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async auth(email, password) {
+    try {
+      const emailItem = await this.userRepository.findOne({
+        where: { email: email }
       })
+      if (emailItem.password === password) {
+        this.generateToken(emailItem);
+      }
+      return null;
     } catch (error) {
       throw error;
     }
@@ -81,6 +109,7 @@ export class UsersService {
     }
   }
 
+
   // async listPosts(id: number) {
   //   try {
   //     const user = await this.userRepository.findOne({
@@ -92,4 +121,13 @@ export class UsersService {
   //     throw error;
   //   }
   // }
+
+  generateToken(user: User) {
+    const payload = { email: user.email, sub: user.idUser };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+
+
 }

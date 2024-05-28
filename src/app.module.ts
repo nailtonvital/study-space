@@ -9,6 +9,7 @@ import { PostCommentsModule } from './post-comments/post-comments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { MediaUserModule } from './media-user/media-user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { MediaUserModule } from './media-user/media-user.module';
         autoLoadEntities: true,
       })
     }),
-    UsersModule, PostsModule, MediasModule, InterestsModule, PostCommentsModule, MediaUserModule],
+    UsersModule, PostsModule, MediasModule, InterestsModule, PostCommentsModule, MediaUserModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
