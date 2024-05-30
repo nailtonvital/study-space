@@ -21,9 +21,12 @@ export class InterestsService {
 
   async findAll() {
     try {
-      return await this.interestRepository.find({
-        relations: ['users', 'medias', 'posts']
-      });
+      return await this.interestRepository.createQueryBuilder('interest')
+        .leftJoinAndSelect('interest.users', 'users')
+        .leftJoinAndSelect('interest.medias', 'medias')
+        .leftJoinAndSelect('interest.posts', 'post')
+        .leftJoinAndSelect('post.user', 'user')
+        .getMany();
     } catch (error) {
       throw error;
     }
