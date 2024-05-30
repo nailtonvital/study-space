@@ -22,7 +22,7 @@ export class InterestsService {
   async findAll() {
     try {
       return await this.interestRepository.createQueryBuilder('interest')
-        .leftJoinAndSelect('interest.users', 'users')
+        .leftJoinAndSelect('interest.users', 'user_interest')
         .leftJoinAndSelect('interest.medias', 'medias')
         .leftJoinAndSelect('interest.posts', 'post')
         .leftJoinAndSelect('post.user', 'user')
