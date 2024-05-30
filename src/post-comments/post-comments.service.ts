@@ -21,7 +21,7 @@ export class PostCommentsService {
   async create(createPostCommentDto: CreatePostCommentDto) {
     try {
       if (createPostCommentDto.userId && createPostCommentDto.postId) {
-        let user = await this.userRepository.findOne(createPostCommentDto.userId);
+        let user = await this.userRepository.findOneById(createPostCommentDto.userId);
         let post = await this.postService.findOne(createPostCommentDto.postId);
 
         return await this.postCommentRepository.save({ ...createPostCommentDto, user, post });

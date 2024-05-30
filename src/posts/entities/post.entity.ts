@@ -27,11 +27,6 @@ export class Post {
     updatedAt: Date;
 
     @ManyToOne(type => User, user => user.posts)
-    @JoinTable({
-        name: 'post',
-        joinColumn: { name: 'idUser', referencedColumnName: 'idUser' },
-        inverseJoinColumn: { name: 'idPost', referencedColumnName: 'idPost' }
-    })
     user: User;
 
     @ManyToMany(type => Interest, interest => interest.posts)

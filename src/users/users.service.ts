@@ -49,7 +49,7 @@ export class UsersService {
   async findAll() {
     try {
       return await this.userRepository.find({
-        relations: { interests: true },
+        relations: { interests: true, posts: true },
       });
     } catch (error) {
       throw error;
@@ -61,7 +61,7 @@ export class UsersService {
     try {
       return await this.userRepository.findOne({
         where: { email: email },
-        relations: ['interests'],
+        relations: ['interests', 'posts'],
       })
     } catch (error) {
       throw error;
@@ -72,7 +72,7 @@ export class UsersService {
     try {
       return await this.userRepository.findOne({
         where: { idUser: id },
-        relations: ['interests'],
+        relations: ['interests', 'posts'],
       });
     } catch (error) {
       throw error;

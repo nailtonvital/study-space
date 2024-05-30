@@ -22,7 +22,7 @@ export class MediasService {
       const interests = [];
       let user = null;
       if (createMediaDto.userId) {
-        user = await this.userRepository.findOne(createMediaDto.userId);
+        user = await this.userRepository.findOneById(createMediaDto.userId);
       }
       if (createMediaDto.interestIds && createMediaDto.interestIds.length > 0) {
 
@@ -35,7 +35,7 @@ export class MediasService {
         }
       }
 
-      return this.mediaRepository.save({ ...createMediaDto, interests});
+      return this.mediaRepository.save({ ...createMediaDto, interests });
     } catch (error) {
       throw error;
     }

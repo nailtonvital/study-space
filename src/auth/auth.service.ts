@@ -19,7 +19,8 @@ export class AuthService {
       throw new UnauthorizedException('Email ou Senha Inválidos');
     }
     if (user.password === password) {
-      return await this.generateToken(user);
+      const token = await this.generateToken(user);
+      return { token, user };
     }
     throw new UnauthorizedException('Email ou Senha Inválidos');
   }
