@@ -72,7 +72,7 @@ export class UsersService {
     try {
       return await this.userRepository.findOne({
         where: { idUser: id },
-        relations: ['interests'],
+        relations: ['interests', 'posts'],
       });
     } catch (error) {
       throw error;

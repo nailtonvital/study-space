@@ -58,12 +58,13 @@ export class PostsService {
 
   async findAll() {
     try {
-      return await this.postRepository.find({
-        relations: {
-          interests: true,
-          user: true
-        }
-      });
+      return await this.postRepository.createQueryBuilder('post')
+        .leftJoinAndSelect('post.interests', 'interests')
+        .leftJoinAndSelect('post.user', 'user')
+        .leftJoinAndSelect('post.comments', 'comments')
+        .leftJoinAndSelect('post.likes', 'likes')
+        .loadRelationCountAndMap('post.commentsCount', 'post.comments')
+        .getMany();
     } catch (error) {
       throw error;
     }
