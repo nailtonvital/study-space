@@ -72,10 +72,14 @@ export class PostsService {
 
   async findOne(id: number) {
     try {
-      return await this.postRepository.findOne({
-        where: { idPost: id },
-        relations: ['interests', 'user', 'comments', 'likes']
-      });
+      return await this.postRepository.createQueryBuilder('post')
+        .where('post.idPost = :id', { id })
+        .leftJoinAndSelect('post.interests', 'interests')
+        .leftJoinAndSelect('post.user', 'user')
+        .leftJoinAndSelect('post.comments', 'comments')
+        .leftJoinAndSelect('post.likes', 'likes')
+        .loadRelationCountAndMap('post.commentsCount', 'post.comments')
+        .getOne();
     } catch (error) {
       throw error;
     }
