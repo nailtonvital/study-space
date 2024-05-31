@@ -70,10 +70,16 @@ export class UsersService {
 
   async findOneById(id: number) {
     try {
-      return await this.userRepository.findOne({
-        where: { idUser: id },
-        relations: ['interests', 'posts'],
-      });
+      return await this.userRepository.createQueryBuilder('user')
+        .where('user.idUser = :id', { id: id })
+        .leftJoinAndSelect('user.interests', 'interests')
+        .leftJoinAndSelect('user.posts', 'posts')
+        .leftJoinAndSelect('posts.likes', 'likes')
+        .leftJoinAndSelect('posts.comments', 'comments')
+        .leftJoinAndSelect('posts.interests', 'post_interests')
+        .loadRelationCountAndMap('user.postsCount', 'user.posts')
+        .loadRelationCountAndMap('posts.commentsCount', 'posts.comments')
+        .getOne();
     } catch (error) {
       throw error;
     }

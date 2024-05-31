@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { LikePostDto } from './dto/likePost.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -53,7 +54,7 @@ export class PostsController {
   }
 
   @Post('post/addLike')
-  async addLike(@Body() body) {
+  async addLike(@Body() body: LikePostDto) {
     const { idPost, idUser } = body;
     try {
       return await this.postsService.addLike(idPost, idUser);
@@ -63,7 +64,7 @@ export class PostsController {
   }
 
   @Post('post/removeLike')
-  async removeLike(@Body() body) {
+  async removeLike(@Body() body: LikePostDto) {
     const { idPost, idUser } = body;
     try {
       return await this.postsService.removeLike(idPost, idUser);
