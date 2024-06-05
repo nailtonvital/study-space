@@ -61,9 +61,10 @@ export class PostsService {
       return await this.postRepository.createQueryBuilder('post')
         .leftJoinAndSelect('post.interests', 'interests')
         .leftJoinAndSelect('post.user', 'user')
-        .leftJoinAndSelect('post.comments', 'comments')
         .leftJoinAndSelect('post.likes', 'likes')
         .loadRelationCountAndMap('post.commentsCount', 'post.comments')
+        .leftJoinAndSelect('post.comments', 'post_comment')
+        .leftJoinAndSelect('post_comment.user', 'comment_user')
         .getMany();
     } catch (error) {
       throw error;
@@ -76,10 +77,12 @@ export class PostsService {
         .where('post.idPost = :id', { id })
         .leftJoinAndSelect('post.interests', 'interests')
         .leftJoinAndSelect('post.user', 'user')
-        .leftJoinAndSelect('post.comments', 'comments')
         .leftJoinAndSelect('post.likes', 'likes')
         .loadRelationCountAndMap('post.commentsCount', 'post.comments')
+        .leftJoinAndSelect('post.comments', 'post_comment')
+        .leftJoinAndSelect('post_comment.user', 'comment_user')
         .getOne();
+
     } catch (error) {
       throw error;
     }
